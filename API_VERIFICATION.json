@@ -1,0 +1,192 @@
+// API Configuration Verification Report
+// Generated on: February 23, 2026
+
+{
+  "project": "FarmerEats",
+  "base_url": "https://sowlab.com/assignment",
+  "api_version": "1.0.0",
+  
+  "endpoints": {
+    "login": {
+      "url": "https://sowlab.com/assignment/user/login",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "request_body": {
+        "email": "string (required) - example: johndoe@mail.com",
+        "password": "string (required) - example: 12345678",
+        "role": "string (default: farmer)",
+        "device_token": "string (default: empty)",
+        "type": "string (default: email) - options: email/facebook/google/apple",
+        "social_id": "string (optional) - for social login"
+      },
+      "expected_response": {
+        "status_code": 200,
+        "content_type": "application/json"
+      },
+      "implementation_file": "lib/services/api_service.dart",
+      "model_file": "lib/models/user_model.dart - LoginRequest",
+      "used_in_screens": [
+        "lib/screens/login_screen.dart"
+      ]
+    },
+    
+    "register": {
+      "url": "https://sowlab.com/assignment/user/register",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "request_body": {
+        "full_name": "string (required) - example: john doe",
+        "email": "string (required) - example: johndoe@mail.com",
+        "phone": "string (required) - example: +19876543210",
+        "password": "string (required) - example: 12345678",
+        "role": "string (default: farmer)",
+        "business_name": "string (required) - example: Dairy Farm",
+        "informal_name": "string (required) - example: London Dairy",
+        "address": "string (required) - example: 3663 Marshville Road",
+        "city": "string (required) - example: Poughkeepsie",
+        "state": "string (required) - example: New York",
+        "zip_code": "string/number (required) - example: 12601",
+        "registration_proof": "string (optional) - example: my_proof.pdf",
+        "business_hours": "object (optional) - example: {M: '8:00am-5:00pm'}",
+        "device_token": "string (default: empty)",
+        "type": "string (default: email) - options: email/facebook/google/apple",
+        "social_id": "string (optional) - for social login"
+      },
+      "expected_response": {
+        "status_code": 200,
+        "content_type": "application/json"
+      },
+      "implementation_file": "lib/services/api_service.dart",
+      "model_file": "lib/models/user_model.dart - RegisterRequest",
+      "used_in_screens": [
+        "lib/screens/signup_hours_screen.dart"
+      ],
+      "data_collected_from": [
+        "lib/screens/signup_screen.dart (Step 1)",
+        "lib/screens/signup_farm_info_screen.dart (Step 2)",
+        "lib/screens/signup_verification_screen.dart (Step 3)",
+        "lib/screens/signup_hours_screen.dart (Step 4)"
+      ]
+    },
+    
+    "forgot_password": {
+      "url": "https://sowlab.com/assignment/user/forgot-password",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "request_body": {
+        "mobile": "string (required) - example: +1984512598"
+      },
+      "expected_response": {
+        "status_code": 200,
+        "content_type": "application/json"
+      },
+      "implementation_file": "lib/services/api_service.dart",
+      "model_file": "lib/models/user_model.dart - ForgotPasswordRequest",
+      "used_in_screens": [
+        "lib/screens/forgot_password_screen.dart",
+        "lib/screens/verify_otp_screen.dart (resend)"
+      ]
+    },
+    
+    "verify_otp": {
+      "url": "https://sowlab.com/assignment/user/verify-otp",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "request_body": {
+        "otp": "string (required) - example: 895642 (5-digit code)"
+      },
+      "expected_response": {
+        "status_code": 200,
+        "content_type": "application/json"
+      },
+      "implementation_file": "lib/services/api_service.dart",
+      "model_file": "lib/models/user_model.dart - VerifyOtpRequest",
+      "used_in_screens": [
+        "lib/screens/verify_otp_screen.dart"
+      ]
+    },
+    
+    "reset_password": {
+      "url": "https://sowlab.com/assignment/user/reset-password",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "request_body": {
+        "token": "string (required) - example: 895642",
+        "password": "string (required) - example: examplepassword",
+        "cpassword": "string (required) - example: examplepassword (must match password)"
+      },
+      "expected_response": {
+        "status_code": 200,
+        "content_type": "application/json"
+      },
+      "implementation_file": "lib/services/api_service.dart",
+      "model_file": "lib/models/user_model.dart - ResetPasswordRequest",
+      "used_in_screens": [
+        "lib/screens/reset_password_screen.dart"
+      ]
+    }
+  },
+  
+  "implementation_details": {
+    "http_client": "package:http/http.dart",
+    "json_encoding": "dart:convert",
+    "error_handling": "try-catch blocks with custom error responses",
+    "success_criteria": "response.statusCode == 200",
+    "response_format": {
+      "success": "boolean",
+      "data": "parsed JSON response body",
+      "statusCode": "HTTP status code",
+      "error": "error message string (on failure)"
+    }
+  },
+  
+  "verification_checklist": {
+    "base_url_configured": "✓ https://sowlab.com/assignment",
+    "all_endpoints_implemented": "✓ 5/5 endpoints",
+    "proper_http_headers": "✓ Content-Type: application/json",
+    "request_models_complete": "✓ All models with toJson()",
+    "error_handling": "✓ Try-catch on all endpoints",
+    "json_encoding": "✓ jsonEncode(request.toJson())",
+    "json_decoding": "✓ jsonDecode(response.body)",
+    "status_code_validation": "✓ Checks for 200 OK",
+    "internet_permission": "✓ Added to AndroidManifest.xml"
+  },
+  
+  "testing_instructions": {
+    "powershell_script": "Run: .\\test_api.ps1",
+    "manual_testing": [
+      "1. Run the app on a device/emulator with internet",
+      "2. Test Login: Enter email and password",
+      "3. Test Register: Complete all 4 signup steps",
+      "4. Test Forgot Password: Enter phone number",
+      "5. Test Verify OTP: Enter 5-digit code",
+      "6. Test Reset Password: Enter new password twice"
+    ],
+    "expected_behaviors": [
+      "Loading indicator shows during API calls",
+      "Success message on 200 response",
+      "Error message on failure",
+      "Navigation on successful completion"
+    ]
+  },
+  
+  "notes": [
+    "All API endpoints match the SowLab documentation exactly",
+    "Request payloads follow the exact field names from spec",
+    "zip_code sent as string (converted from number input)",
+    "business_hours sent as object with day keys",
+    "All optional fields properly handled with null checks",
+    "Social login fields (social_id) ready for future implementation",
+    "Device token field included for push notification support"
+  ]
+}
