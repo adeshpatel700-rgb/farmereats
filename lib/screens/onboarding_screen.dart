@@ -66,8 +66,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: PageView.builder(
           controller: _pageController,
           itemCount: _pages.length,
+          onPageChanged: (index) {
+            setState(() => _currentPage = index);
+          },
           itemBuilder: (context, index) {
-            return OnboardingPage(
+            return OnboardingItem(
               data: _pages[index],
               pageNumber: index + 1,
               currentPage: _currentPage,
@@ -94,7 +97,7 @@ class OnboardingData {
   });
 }
 
-class OnboardingPage extends StatelessWidget {
+class OnboardingItem extends StatelessWidget {
   final OnboardingData data;
   final int pageNumber;
   final int currentPage;
@@ -102,7 +105,7 @@ class OnboardingPage extends StatelessWidget {
   final VoidCallback onJoinPressed;
   final VoidCallback onLoginPressed;
 
-  const OnboardingPage({
+  const OnboardingItem({
     super.key,
     required this.data,
     required this.pageNumber,
@@ -114,107 +117,128 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        children: [
-          // Illustration container with rounded corners
-          Expanded(
-            flex: 6,
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: data.color,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(child: _buildIllustration()),
-            ),
-          ),
-          const SizedBox(height: 32),
-          // Title
-          Text(
-            data.title,
-            style: GoogleFonts.beVietnamPro(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textDark,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Description
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              data.description,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.beVietnamPro(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textGrey,
-                height: 1.5,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Page indicators
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              totalPages,
-              (index) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: 8,
-                height: 8,
+    return Stack(
+      children: [
+        // Top illustration section with colored background
+        Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: index == currentPage
-                      ? AppColors.textDark
-                      : AppColors.textGrey.withOpacity(0.3),
+                  color: data.color,
+                  borderRadius: BorderRadius.circular(24),
                 ),
+                child: Center(child: _buildIllustration()),
               ),
             ),
-          ),
-          const SizedBox(height: 32),
-          // Join button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onJoinPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: data.color,
-                foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
+            const SizedBox(height: 200), // Space for bottom white container
+          ],
+        ),
+        // Bottom white rounded content panel (overlapping)
+        Positioned(
+          left: 16,
+          right: 16,
+          bottom: 16,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -2),
                 ),
-                elevation: 0,
-              ),
-              child: Text(
-                'Join the movement!',
-                style: GoogleFonts.beVietnamPro(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title
+                Text(
+                  data.title,
+                  style: GoogleFonts.beVietnamPro(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textDark,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 12),
+                // Description
+                Text(
+                  data.description,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  style: GoogleFonts.beVietnamPro(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textGrey,
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Page indicator dots
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    totalPages,
+                    (index) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: index == currentPage
+                            ? AppColors.textDark
+                            : AppColors.textGrey.withOpacity(0.3),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Primary button - Join the movement
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: onJoinPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: data.color,
+                      foregroundColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: const StadiumBorder(),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      'Join the movement!',
+                      style: GoogleFonts.beVietnamPro(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Login text button
+                TextButton(
+                  onPressed: onLoginPressed,
+                  child: Text(
+                    'Login',
+                    style: GoogleFonts.beVietnamPro(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textDark,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          // Login link
-          TextButton(
-            onPressed: onLoginPressed,
-            child: Text(
-              'Login',
-              style: GoogleFonts.beVietnamPro(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textDark,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
